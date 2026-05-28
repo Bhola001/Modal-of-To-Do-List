@@ -6,7 +6,10 @@ function saveTasks() {
 
 function addTask() {
     let taskInput = document.getElementById("taskInput");
+    let taskDateTime = document.getElementById("taskDateTime");
+
     let taskText = taskInput.value.trim();
+    let dateTime = taskDateTime.value;
 
     if (taskText === "") {
         alert("Please enter a task");
@@ -14,26 +17,31 @@ function addTask() {
     }
 
     tasks.push({
-    text: taskText,
-    completed: false
-});
+        text: taskText,
+        datetime: dateTime,
+        completed: false
+    });
+
     saveTasks();
     displayTasks();
 
     taskInput.value = "";
+    taskDateTime.value = "";
 }
 
 function displayTasks() {
     let taskList = document.getElementById("taskList");
-
-    // Purani list clear karo
     taskList.innerHTML = "";
 
     tasks.forEach((task, index) => {
         let li = document.createElement("li");
 
         let span = document.createElement("span");
-        span.innerText = task.text;
+
+        span.innerHTML = `
+            <b>${task.text}</b><br>
+            <small>${task.datetime ? new Date(task.datetime).toLocaleString() : ""}</small>
+        `;
 
         if (task.completed) {
             span.classList.add("completed");
@@ -42,10 +50,8 @@ function displayTasks() {
         let buttonDiv = document.createElement("div");
         buttonDiv.classList.add("task-buttons");
 
-        // Done Button
         let completeBtn = document.createElement("button");
         completeBtn.innerText = "Done";
-        completeBtn.classList.add("complete-btn");
 
         completeBtn.onclick = function () {
             tasks[index].completed = !tasks[index].completed;
@@ -53,7 +59,6 @@ function displayTasks() {
             displayTasks();
         };
 
-        // Delete Button
         let deleteBtn = document.createElement("button");
         deleteBtn.innerText = "Delete";
         deleteBtn.classList.add("delete-btn");
